@@ -1,7 +1,7 @@
 import java.util.Scanner;
-public class Semaphore {
-     
+public class Semaphore {   
     protected int value = 0 ;
+    
     protected Semaphore() { value = 0 ; }
     protected Semaphore(int initial) { value = initial ; }
     public synchronized void P()
@@ -19,7 +19,7 @@ public class Semaphore {
     }
     public synchronized void V()
     {
-        value++ ; 
+        value++; 
         if (value <= 0) 
             notify();
     }
@@ -28,27 +28,25 @@ public class Semaphore {
             value--;
             return true;
         }
+
         long startTime = System.currentTimeMillis();
         long remained=t;
+
         while (remained>0 && value<=0)
         {
             try{
                 wait(remained);
             }
             catch(InterruptedException e)
-            
+
             {
                 remained=t-(System.currentTimeMillis()-startTime);
-            }
-            
+            }    
         }
         if (value > 0){
                 value--;
                 return true;
             }
-            
-        
         return false; 
-    }
-   
+    } 
 }
