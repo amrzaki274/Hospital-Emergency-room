@@ -1,4 +1,3 @@
-import java.util.Scanner;
 public class Semaphore {   
     protected int value = 0 ;
     
@@ -7,21 +6,21 @@ public class Semaphore {
     public synchronized void P()
     {
         value-- ;
-        if (value < 0)
-        try{ 
-            wait();
-        }
-        catch( InterruptedException e )
-        {
-            Thread.currentThread().interrupt();
-            value++;
+        while (value < 0){
+            try{ 
+                wait();
+            }
+            catch( InterruptedException e )
+            {
+                Thread.currentThread().interrupt();
+                value++;
+            }
         }
     }
     public synchronized void V()
     {
         value++; 
-        if (value <= 0) 
-            notify();
+        notifyAll();
     }
     public synchronized boolean check (long t) {
         if (value > 0) {
@@ -38,15 +37,16 @@ public class Semaphore {
                 wait(remained);
             }
             catch(InterruptedException e)
-
             {
-                remained=t-(System.currentTimeMillis()-startTime);
-            }    
+                Thread.currentThread().interrupt();
+                value++;  
+            } 
+            remained=t-(System.currentTimeMillis()-startTime);   
         }
         if (value > 0){
                 value--;
                 return true;
-            }
+        }
         return false; 
     } 
 }
